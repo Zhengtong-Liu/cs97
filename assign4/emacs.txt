@@ -1,13 +1,26 @@
-1. This commit is a merge between commits ffd201c47e  and 18c0e20bea, with author Glenn Morris, and the commit was made 2020-20-17 09:48:54 (-0700 time zone). It was described as a merge from origin/emacs-27 branch.
+1. This commit is a merge between commits ffd201c47e  and 18c0e20bea, with 
+author Glenn Morris, and the commit was made 2020-20-17 09:48:54 (-0700 time 
+zone). It was described as a merge from origin/emacs-27 branch.
 
 There are three windows on the top of the screen:
-	the left one shows the graph of the commits history together with brief commits messages, the middle one is the author name and author email corresponding to each commit, the right one displays the commit time.
+	the left one shows the graph of the commits history together with brief 
+commits messages, the middle one is the author name and author email 
+corresponding to each commit, the right one displays the commit time.
 
-In the middle of the screen, there are some options like searching a commit by its SHAI ID.
+In the middle of the screen, there are some options like searching a commit by 
+its SHAI ID.
 
 
 At the bottom of the screen, there are mainly two windows:
-	the left one shows the detailed commit message, and I can view the diff, old version or new version. On the right, there are options to view the patch or the tree.
+	the left one shows the detailed commit message, and I can view the 
+diff, old version or new version. On the right, there are options to view the 
+patch or the tree.
 
-3. the differences between your repository and the one in ~eggert/src/gnu/emacs: On my repository downloaded from Savannah, there is only one branch, the "master" branch; however, in ~eggert/src/gnu/emacs, there are 179 branches. Actually, my repository downloaded is not a working directory of emacs, but only a copied repository as an emacs user. However, ~eggert/src/gnu/emacs is actually a git repository for those who actually maintain and modify emacs like Prof. Eggert.  
+3. the differences between your repository and the one in 
+~eggert/src/gnu/emacs: On my repository downloaded from Savannah, there is only 
+one branch, the "master" branch; however, in ~eggert/src/gnu/emacs, there are 
+179 branches. Actually, my repository downloaded is not a working directory of 
+emacs, but only a copied repository as an emacs user. However, 
+~eggert/src/gnu/emacs is actually a git repository for those who actually 
+maintain and modify emacs like Prof. Eggert.  
 
