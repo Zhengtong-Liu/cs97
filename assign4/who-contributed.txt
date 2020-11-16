@@ -1,0 +1,28 @@
+To find this line (“Even newspaper reports present contradictory 
+information.”) in the history, I first typed 
+
+	git log -S “Even newspaper reports present contradictory 
+information.”
+
+And found that this line was in commit 
+“c12b432741eed9a422fbf99fa27af6e7a941d88b” and the file changed was 
+“northamerica.” The commit showed that the author who wrote this was Arthur 
+David Olson. In order to investigate who wrote the particular line, I typed 
+
+	git blame northamerica c12b432741eed9a422fbf99fa27af6e7a941d88b | grep 
+"Even newspaper reports present contradictory information.”
+
+And the output is 
+
+	c12b4327 (Arthur David Olson 1995-12-21 11:43:42 -0500  285) # and 
+writes ``Even newspaper reports present contradictory information.’'
+
+Therefore, Arthur David Olson was the author who wrote this particular line.
+
+I also found that the committer was Professor Paul Eggert by the command below:
+
+	git log -S "Even newspaper reports present contradictory information." 
+--pretty=format:"%an is the author, %cn is the committer”
+
+and the output was
+	Arthur David Olson is the author, Paul Eggert is the committer
