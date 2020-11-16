@@ -1,0 +1,70 @@
+Assignment2
+
+Exercise 2.1
+	1. compute (2**(3**4)) in the scratch buffer:
+		commands:
+			(expt 2 (expt 3 4)) C-j
+		Output:
+			2417851639229258349412352
+
+	2. determine whether this number fits into a 64-bit signed integer:
+		commands:
+			(< (expt 2 (expt 3 4)) (- (expt 2 63) 1)) C-j
+		Output:
+			nil
+		The maximum 64-bit signed integer is 2**63 -1, since (2**(3**4)) < (2**63 -1) returns nil, it means that this number cannot fit into a 64-bit signed integer
+
+	3. C-h b:
+		Display a buffer showing a list of all defined keys, and their definitions.
+
+	4. C-h k C-h k:
+		This commands gives the documentation page for C-h k in the help buffer. Since C-h k displays documentation of the function invoked by key-list, C-h k C-h k would display the documentation of C-h k. 
+	
+	5. C-h k M-SPC:
+		It shows the documentation page for M-SPC in the help buffer since C-h k displays the key-list's, or in this case M-SPC's, documentation page.
+		Function of M-SPC:
+			Delete all spaces and tabs around point, leaving one space (or N spaces).
+			If N is negative, delete newlines as well, leaving -N spaces.
+
+	6. For example:
+		1       6 to 1 6 as I typed M-SPC between '1' and '6'
+
+	7.
+		Commands:
+			M-:(just-one-space 3) RET --> shirk the spaces around the current point to 3 spaces
+			M-: (cycle-spacing 3 nil 'single-shot) RET will have the same effect
+		Commands using M-x that reach the same effect:
+			C-u 3 M-x just-one-space RET
+			C-u 3 M-x cycle-spacing RET (this might have slightly different effect, as it does not have other args "nil", ''single-shot", but it would shirk spaces around the current point to 3 spaces 
+
+
+Notes for HW:
+	1. Output of 		python ./randline.py /dev/null
+
+Traceback (most recent call last):
+  File "randline.py", line 70, in <module>
+    main()
+  File "randline.py", line 64, in main
+    sys.stdout.write(generator.chooseline())
+  File "randline.py", line 34, in chooseline
+    return random.choice(self.lines)
+  File "/usr/local/cs/Python-2.7.18/lib/python2.7/random.py", line 277, in choice
+    return seq[int(self.random() * len(seq))]  # raises IndexError if seq is empty
+IndexError: list index out of range
+
+	Reasons:
+		Since the /dev/null file is empty, the choiceline method of the randline class may lead to access of index out of range. As the traceback indicates, random.choice(self.lines) would raise index error if the sequence is empty.
+
+	2. Output of 		python3 ./randline.py /dev/null
+
+ File "/w/home.08/cs/ugrad/zhengton/./randline.py", line 65
+    except IOError as (errno, strerror):
+                      ^
+SyntaxError: invalid syntax
+	
+	Reasons: the syntax above is valid in python2 but not in python3 anymore
+
+	3. When my program is invoked with Python2 rather than Python3, no error occurs. Because I did not use syntax that cannot be identified by Python2. 
+			
+	   
+	

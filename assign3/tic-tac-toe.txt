@@ -1,0 +1,231 @@
+1. Setup local environment and get started:
+	a. Download Node.js
+	b. Create a new project in terminal by typing command: "npx create-react
+-app tic-tac-toe"
+	c. Delete all files in the src/ folder
+		commands: cd tic-tac-toe
+				 cd src
+				 rm -f *
+				 cd ..
+	d. Open tic-tac-toe from VS code
+	e. Add index.css and index.js in the src/ folder
+	f. Paste the html, css, and js file in the Starter Code in the tutorial 
+to the local tic-tac-toe file(index.html, index.css, index.js)
+	g. Add the import lines to the top of index.js file:
+		codes: import React from 'react';
+			  import ReactDOM from 'react-dom';
+			  import './index.css';
+	g. Open the web by typing "npm start" into the terminal, see the empty t
+ic-tac-toe with an empty board
+
+2. Implement tic-tac-toe without "traceback" feature:
+	a. Create the constructor for the "Game" class:
+
+	// at the current phase, we only need to implement the basic functionali
+ty, so only the board "squares" and the turn flag "xIsNext" is needed;
+
+	constructor(props)  
+	{
+        super(props);
+        this.state = {
+            squares: Array(9).fill(null),
+            xIsNext: true
+        };
+     }
+
+	b. Lift "status" upto the "Game" class and define what is to be a "winne
+r":
+		*delete "status" in the "Board" class; (including its declaratio
+n and use in the render method)
+		*add a helper function "calculateWinner" at the last of the scri
+pt file;
+
+function calculateWinner(squares) {
+    const lines = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6]
+    ];
+    for (let i = 0; i < lines.length; i++) {
+      const [a, b, c] = lines[i];
+      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) 
+{
+        return squares[a];
+      }
+    }
+    return null;
+  }
+		
+		*get status in the Game class and visualize the status message a
+s required;
+			add codes below to the beginning of the render method of
+ the "Game" class:
+	const winner = calculateWinner(this.state.squares);
+        let status;
+        if(winner) {
+            status = "Winner: " + winner;
+        } else {
+            status = "Next Player: " + (this.state.xIsNext ? "X" : "O");
+        }
+			change /*status*/ to status in the argument for return f
+or the render method;
+
+		At this time, the status information should be visible to the ri
+ght of the board on the website;
+
+	c. Implement the basic tic-tac-toe game
+		*implement the method "handleClick" in the Game class that handl
+es clicks on squares
+
+	//make a copy of squares and change the states as the click specifies
+	handleClick(i){
+        const squares = this.state.squares.slice();
+        if(calculateWinner(squares) || squares[i]){
+            return;
+        }
+        squares[i] = this.state.xIsNext ? "X" : "O";
+        this.setState({
+            squares: squares,
+            xIsNext: !this.state.xIsNext
+        });
+    }
+
+		*access the "squares" state from the Game class and pass it down
+ to the Board and Square classes, and pass the click signal back from the Square
+ class to the Board class and finally to the Game class;
+		
+		in the Game class:
+			add in the beginning of the render method:
+				const squares = this.state.squares;
+			in the return argument, add "squares" and "onClick" as t
+wo props to the Board class:
+				//pass the Board "squares" to the Board class as
+ well as the 'handClick' method as onClick(i)
+				<Board 
+					squares={squares} 
+            			onClick={i => this.handleClick(i)}
+            		/>
+		in the Board class:
+			pass the props from the Game class down to the Square cl
+ass by the 'renderSquare' method;
+				change the "renderSquare" method to:
+	// 'value' specifies the value to be displayed inside each square, 'onCl
+ick' specifies what to do when the square is clicked 
+	renderSquare(i)
+	{
+      return <Square 
+        value={this.props.squares[i]}
+        onClick={() => this.props.onClick(i)}
+        />;
+    	}
+		in the Square class:
+			pass the prop to onClick of the Button class, and displa
+y the value as required:
+	render() {
+      return (
+        <button className="square"
+            onClick={this.props.onClick}>
+          {this.props.value}
+        </button>
+      );
+    	}
+		also, we can change the class Square to a function:
+	function Square(props) {
+      return (
+        <button className="square"
+            onClick={props.onClick}>
+          {props.value}
+        </button>
+      );
+  	}
+
+	At this time, the tic-tac-toe should work with the basic functionality, 
+without the feature of "traceback"
+
+3. Implement the "traceback" or "time travel" feature:
+	a. Store the "history" and "stepNumber" of the Board information to the 
+state of the Game class:
+			now the constructor of the Game class becomes:
+	// "history" stores a list of squares at different turns, stepNumber rec
+ords the number of turns or moves
+	constructor(props){
+        super(props);
+        this.state = {
+            history:[
+                {
+                    squares: Array(9).fill(null)
+                }
+            ],
+            stepNumber: 0,
+            xIsNext: true
+        };
+    }
+
+	b. Enable the handClick method of the Game class to add squares to histo
+ry and increment stepNumber:
+			now the handClick method becomes:
+	// change the history according to stepNumber stored, and update history
+ and stepNumber after each click
+	handleClick(i){
+        const history = this.state.history.slice(0, this.state.stepNumber+1);
+        const current = history[history.length - 1];
+        const squares = current.squares.slice();
+        if(calculateWinner(squares) || squares[i]){
+            return;
+        }
+        squares[i] = this.state.xIsNext ? "X" : "O";
+        this.setState({
+            history: history.concat([
+                {
+                    squares: squares
+                }
+            ]),
+            stepNumber: history.length,
+            xIsNext: !this.state.xIsNext
+        });
+    }
+
+	c. Change the render method of the Game class to enable "traceback" or "
+time travel":
+		*access the current Board through the stored history:
+			const history = this.state.history;
+        		const current = history[this.state.stepNumber];
+		*access the squares with current:
+			const winner = calculateWinner(current.squares);
+			<Board squares={current.squares} 
+           		  onClick={i => this.handleClick(i)}
+            	/>
+		*add the buttons of "traceback":
+	// implement the function of each button, when clicked it would direct t
+he player to certain step 
+	const moves = history.map((step, move) => {
+            const desc = move ? 
+                    'Go to move #' + move :
+                    'Go to game start';
+            return(
+                <li key={move}>
+                    <button onClick={()=> this.jumpTo(move)}>
+                        {desc}
+                    </button>
+                </li>
+            );
+        })
+		*add the helper method jumpTo:
+	// this method of the Game class enables jump to certain step and update
+ the state
+	jumpTo(step){
+        this.setState({
+            stepNumber: step,
+            xIsNext: (step % 2) === 0
+        });
+    }
+		*visualize it on the website:
+			'<ol>{/* TODO */}<ol>' to '<ol>{moves}</ol>'
+
+	At this time, the second feature is also added, so the tic-tac-toe game 
+should be ready to play

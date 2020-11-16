@@ -1,0 +1,233 @@
+Lab1.5
+	1. Commands:
+		which mv
+		which sh
+	   Answers:
+	   	mv: /usr/local/cs/bin/mv
+	   	sh: /usr/bin/sh
+
+	2. Commands: 
+		find /usr/bin -regex '^/usr/bin/.r$'
+	Answers:
+		/usr/bin/ar - create, modify, and extract from archives
+		/usr/binpr - convert text files for printing
+		/usr/bin/tr - translate or delete characters
+
+	3. Commands:
+		ls -l /usr/bin/emacs
+		ls -l /etc/alternatives/emacs
+	   Answers:
+		/usr/bin/emacs-24.3
+
+	4. Commands:
+		/usr/bin/gcc --version
+		gcc --version
+		which gcc
+	   Answers:
+		version of /usr/bin/gcc: gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-39)
+	   	version of gcc: gcc (GCC) 10.2.0
+		gcc actually refers to the file /usr/local/cs/bin/gcc, which is different file from /usr/bin/gcc, so they are different. 
+
+	5. u+sw: set the "set-user-ID" bit, which tells the OS to execute the program with the userid of its owner and changes the permission so that the user can write this file
+	   o-w: change the permission so that others cannot write this file
+
+	6. Commands:
+		find /usr/local/cs -type d -mtime -28
+	   Answers:
+/usr/local/cs
+/usr/local/cs/src/bash
+/usr/local/cs/src/bash/RCS
+/usr/local/cs/src/grep
+/usr/local/cs/src/grep/RCS
+/usr/local/cs/src/ocaml
+/usr/local/cs/src/ocaml/RCS
+/usr/local/cs/share/info
+/usr/local/cs/share/man/man1
+/usr/local/cs/share/man/man3
+/usr/local/cs/bin
+/usr/local/cs/ocaml-4.11.1
+/usr/local/cs/ocaml-4.11.1/bin
+/usr/local/cs/ocaml-4.11.1/lib
+/usr/local/cs/ocaml-4.11.1/lib/ocaml
+/usr/local/cs/ocaml-4.11.1/lib/ocaml/stublibs
+/usr/local/cs/ocaml-4.11.1/lib/ocaml/compiler-libs
+/usr/local/cs/ocaml-4.11.1/lib/ocaml/caml
+/usr/local/cs/ocaml-4.11.1/lib/ocaml/threads
+/usr/local/cs/ocaml-4.11.1/lib/ocaml/ocamldoc
+/usr/local/cs/ocaml-4.11.1/man
+/usr/local/cs/ocaml-4.11.1/man/man1
+/usr/local/cs/ocaml-4.11.1/man/man3
+/usr/local/cs/bash-5.0.18
+/usr/local/cs/bash-5.0.18/bin
+/usr/local/cs/bash-5.0.18/share
+/usr/local/cs/bash-5.0.18/share/man
+/usr/local/cs/bash-5.0.18/share/man/man1
+/usr/local/cs/bash-5.0.18/share/info
+/usr/local/cs/bash-5.0.18/share/doc
+/usr/local/cs/bash-5.0.18/share/doc/bash
+/usr/local/cs/bash-5.0.18/lib
+/usr/local/cs/bash-5.0.18/lib/bash
+/usr/local/cs/bash-5.0.18/lib/pkgconfig
+/usr/local/cs/bash-5.0.18/include
+/usr/local/cs/bash-5.0.18/include/bash
+/usr/local/cs/bash-5.0.18/include/bash/builtins
+/usr/local/cs/bash-5.0.18/include/bash/include
+/usr/local/cs/grep-3.5
+/usr/local/cs/grep-3.5/share
+/usr/local/cs/grep-3.5/share/locale
+/usr/local/cs/grep-3.5/share/locale/af
+/usr/local/cs/grep-3.5/share/locale/af/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/be
+/usr/local/cs/grep-3.5/share/locale/be/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/bg
+/usr/local/cs/grep-3.5/share/locale/bg/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/ca
+/usr/local/cs/grep-3.5/share/locale/ca/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/cs
+/usr/local/cs/grep-3.5/share/locale/cs/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/da
+/usr/local/cs/grep-3.5/share/locale/da/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/de
+/usr/local/cs/grep-3.5/share/locale/de/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/el
+/usr/local/cs/grep-3.5/share/locale/el/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/eo
+/usr/local/cs/grep-3.5/share/locale/eo/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/es
+/usr/local/cs/grep-3.5/share/locale/es/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/et
+/usr/local/cs/grep-3.5/share/locale/et/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/eu
+/usr/local/cs/grep-3.5/share/locale/eu/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/fi
+/usr/local/cs/grep-3.5/share/locale/fi/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/fr
+/usr/local/cs/grep-3.5/share/locale/fr/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/ga
+/usr/local/cs/grep-3.5/share/locale/ga/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/gl
+/usr/local/cs/grep-3.5/share/locale/gl/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/he
+/usr/local/cs/grep-3.5/share/locale/he/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/hr
+/usr/local/cs/grep-3.5/share/locale/hr/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/hu
+/usr/local/cs/grep-3.5/share/locale/hu/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/id
+/usr/local/cs/grep-3.5/share/locale/id/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/it
+/usr/local/cs/grep-3.5/share/locale/it/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/ja
+/usr/local/cs/grep-3.5/share/locale/ja/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/ko
+/usr/local/cs/grep-3.5/share/locale/ko/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/ky
+/usr/local/cs/grep-3.5/share/locale/ky/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/lt
+/usr/local/cs/grep-3.5/share/locale/lt/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/nb
+/usr/local/cs/grep-3.5/share/locale/nb/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/nl
+/usr/local/cs/grep-3.5/share/locale/nl/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/pa
+/usr/local/cs/grep-3.5/share/locale/pa/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/pl
+/usr/local/cs/grep-3.5/share/locale/pl/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/pt
+/usr/local/cs/grep-3.5/share/locale/pt/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/pt_BR
+/usr/local/cs/grep-3.5/share/locale/pt_BR/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/ro
+/usr/local/cs/grep-3.5/share/locale/ro/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/ru
+/usr/local/cs/grep-3.5/share/locale/ru/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/sk
+/usr/local/cs/grep-3.5/share/locale/sk/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/sl
+/usr/local/cs/grep-3.5/share/locale/sl/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/sr
+/usr/local/cs/grep-3.5/share/locale/sr/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/sv
+/usr/local/cs/grep-3.5/share/locale/sv/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/th
+/usr/local/cs/grep-3.5/share/locale/th/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/tr
+/usr/local/cs/grep-3.5/share/locale/tr/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/uk
+/usr/local/cs/grep-3.5/share/locale/uk/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/vi
+/usr/local/cs/grep-3.5/share/locale/vi/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/zh_CN
+/usr/local/cs/grep-3.5/share/locale/zh_CN/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/locale/zh_TW
+/usr/local/cs/grep-3.5/share/locale/zh_TW/LC_MESSAGES
+/usr/local/cs/grep-3.5/share/man
+/usr/local/cs/grep-3.5/share/man/man1
+/usr/local/cs/grep-3.5/share/info
+/usr/local/cs/grep-3.5/bin
+
+	7. Commands:
+		which find
+		cd /usr/bin
+		find -type l | wc -l
+	   Answer:
+		280
+
+	8. Commands:
+		cd /usr/lib64 
+	   	ls --group-directories-first -alt 
+	   Answer:
+		the oldest regular file in the /usr/lib64 directory is librom1394.so.0.3.0
+
+	9.Command: 
+		man locale
+	  Answer:
+		/usr/lib/locale/locale-archive
+		/usr/share/i18n/locales
+	10.Commands:
+		C-h a downcase RET
+	   Answers:
+downcase-dwim                 M-x ... RET
+   Downcase words in the region, if active; if not, downcase word at
+   point.
+downcase-region               C-x C-l
+   Convert the region to lower case.  In programs, wants two
+   arguments.
+downcase-word                 M-l
+   Convert to lower case from point to end of word, moving over.
+
+	11. Commands:
+		C-h b RET
+		C-x o
+		C-M-s ^C-M-r RET
+	    Answers:	
+C-M-r           isearch-backward-regexp
+C-M-s           isearch-forward-regexp
+C-M-t           transpose-sexps
+C-M-u           backward-up-list
+C-M-v           scroll-other-window
+	    
+	12. Command:
+		C-h k C-g
+	    Answers:
+		C-g runs the command keyboard-quit
+		In details, C-g signal a ‘quit’ condition. During execution of Lisp code, this character causes a quit directly. At top-level, as an editor command, this simply beeps.
+
+	13.Command:
+		C-h f yank
+	   Answers: 
+		Yank reinsert ("paste") the last stretch of killed text. It can be invoked by C-y.
+
+	14. Commands:
+		M-x shell
+		cd /usr/bin
+		ls -l
+		C-x o
+		C-x d
+		/usr/bin
+		The ls -l command lists the directory without .(current directory) and ..(parent directory), but the Emacs dired command lists these two. 
+
+Notes for Homework:
+	I solved this problem in two ways, one is in myspell, another is the following:
+	tr -cs 'A-Za-z' '[\n*]' | sort -u | comm -23 - <(sort -u <(tr -cs 'A-Za-z' '[\n*]' 0</usr/share/dict/linux.words))
+	Since this approach would modify the original words file, I decided not to use it as the answer of my HW. Instead, I enlarged the regex expression that would be left unchanged for 'tr' command in that answer. In this way, words that exist in the linux.words would not be modified after 'tr' command. 

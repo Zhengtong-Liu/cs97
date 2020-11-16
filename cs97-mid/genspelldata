@@ -1,0 +1,5 @@
+#!/bin/bash
+
+shuf -n $1 </usr/share/dict/linux.words | tr '\n' ' '
+shuf -n $2 $3 | tr '\n' ' '
+echo ''

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+
+
+COUNT=0
+while [ "$COUNT" -lt "$1" ]
+do
+    ./genspelldata $2 $3 $4 | ./myspell
+    COUNT=`expr $COUNT + 1`
+done
+

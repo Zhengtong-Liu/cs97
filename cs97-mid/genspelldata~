@@ -1,0 +1,4 @@
+#!/bin/bash
+
+shuf -n $1 </usr/share/dict/linux.words
+shuf -n $2 $3

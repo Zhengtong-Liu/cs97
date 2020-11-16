@@ -1,0 +1,26 @@
+#!/usr/bin/python
+
+import re, sys
+
+
+def tzcount():
+    regex = re.compile('[-+][0-9]{2}00\n\n')
+    results = regex.findall(sys.stdin.read())
+    dic = {}
+    tz = []
+    for result in results:
+        result = result.replace("\n", "")
+        keyResult = int(result)
+        if keyResult not in dic.keys():
+            dic[keyResult] = [result, 1]
+            if keyResult not in tz:
+                tz.append(keyResult)
+        else:
+            dic[keyResult][1] += 1
+    tz.sort()
+    for i in range(len(tz)):
+        sys.stdout.write("{0} {1}\n".format(dic[tz[i]][0], dic[tz[i]][1]))
+
+
+if __name__ == "__main__":
+    tzcount()

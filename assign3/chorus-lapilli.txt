@@ -1,0 +1,179 @@
+1. Setup local environment:
+	a. Download Node.js
+	b. Create a new project in terminal by typing command: "npx create-react
+-app my-app"
+	c. Delete all files in the src/ folder
+		commands: cd mp-app
+				 cd src
+				 rm -f *
+				 cd ..
+	d. Open my-app from VS code
+	e. Add index.css and index.js in the src/ folder
+	f. Add the import lines to the top of index.js file:
+		codes: import React from 'react';
+			  import ReactDOM from 'react-dom';
+			  import './index.css';
+	g. Open the web by typing "npm start" into the terminal, see the empty c
+horus-lapilli
+
+2. Start:
+	a. Paste the html, css, and js files of tic-tac-toe into chorus-lapilli 
+inside VS code
+	b. Test that the current tic-tac-toe works properly on the website page
+	c. Add two helper functions, adjacent function and moveAdjacent function
+, at the end of index.js
+
+  function adjacent(squares, i) // define what means to be adjacent to 'i' on th
+e Board 'squares'(adjacent vertically, horizontally, or diagonally}
+  {
+    switch(i){
+      case 0:
+        return [1,3,4];
+      case 1:
+        return [0,2,3,4,5];
+      case 2:
+        return [1,4,5];
+      case 3:
+        return [0,1,4,7];
+      case 4:
+        return [0,1,2,3,4,5,6,7,8];
+      case 5:
+        return [1,2,4,7,8];
+      case 6:
+        return [3,4,7];
+      case 7:
+        return [3,4,5,6,8];
+      case 8:
+        return [4,5,7];
+    }
+  }
+
+  function moveAdjacent(squares, i, j) // check whether squares[i] to squares[j]
+ is a valid move and return the destination of move, if squares[j] is adjacent t
+o squares[i] and is empty, then return 'j' as the destination, otherwise, return
+ 'i'
+  {
+    const neighbor = adjacent(squares, i);
+    for(var k = 0; k < neighbor.length; k++){
+      if(j === neighbor[k] && !squares[j])
+        return j;
+    }
+    return i;
+  }
+	At this time, the web should look the same as the tic-tac-toe, as no act
+ual changes to the web are made yet
+
+3. Implement the new features of chorus-lapilli:
+	a. Pack most of the handleClick method of the Game class into a new meth
+od for future use
+		*leave three lines in the handleClick method:
+			const history = this.state.history.slice(0, this.state.s
+tepNumber + 1);
+      		const current = history[history.length - 1];
+      		const squares = current.squares.slice();
+		In this way, squares can still be accessed inside this method
+
+		*Pact all the remaining lines into a new method of the Game clas
+s:
+	clickMove(i, history, squares) // this method makes "X" or "O" appear on
+ the board, and stores this round's game information; "i" stands for the place o
+n the board, "history" is a list of history boards, "squares" is the list storin
+g the current board
+	{
+      if (calculateWinner(squares) || squares[i]) {
+        return;
+      }
+
+      squares[i] = this.state.xIsNext ? "X" : "O";
+      this.setState({
+        history: history.concat([
+          {
+            squares: squares
+          }
+        ]),
+        stepNumber: history.length,
+        xIsNext: !this.state.xIsNext
+      });
+    }
+
+	b. Implement the first distinct feature that players can move pieces aft
+er having 3 pieces on board
+		*First adding the condition to the previous case:
+	if(this.state.stepNumber < 6){
+        this.clickMove(i, history, squares);
+      }
+		At this time, any move after 3 pieces for each player would not 
+appear on the board
+		*Separate the remaining moves to 2 clicks each time
+			**Add 'firstClick' to the state of Game, which stores -1
+ as a default value, otherwise store the firstClick/starting point of a move aft
+er 3 pieces
+	this.state = {
+        ...
+        firstClick: -1
+      };
+
+			**When it is the firstClick, and the clicked square is c
+onsistent with the player, store the index into 'firstClick'
+	else{
+        if(this.state.firstClick < 0){
+          if((this.state.xIsNext && squares[i] === "X") || (!this.state.xIsNext 
+&& squares[i] === "O"))
+            this.setState({firstClick : i});
+        }
+		...
+	}
+			**On the second click, first access the index of the fir
+stClick, calculate the destination
+		else{
+          		const firstClick = this.state.firstClick;
+          		const j = moveAdjacent(current, firstClick, i);
+			...
+		}
+			**then if the destination is not the original starting p
+oint, remove the piece at the starting point, and make it appear on the destinat
+ion, and set 'firstClick' to its default value
+		if(firstClick !== j)
+          {
+            squares[firstClick] = null;
+            // console.log("can move and square is "+squares);
+            this.clickMove(j, history, squares);
+          }
+          this.setState({firstClick : -1});
+	}
+		
+	At this time, chorus-lapilli is half-completed; both players can have 3 
+pieces in first 3 rounds(6 moves), and can move the piece to adjacent square in 
+each turn afterwards.
+		
+	c. Implement the second distinct feature that player must either win or 
+vacate the center of board after having 3 pieces on board
+		*write a helper method to check whether the attempt by the playe
+r can achieve the effect of vacate or win:
+    vacateORwin(firstClick, j, squares, player) // pass the starting point "firs
+tClick", intended destination 'j', the board 'squares', and the player's piece t
+oken 'player'; return true if this potential move vacate the center or win, retu
+rn false otherwise
+    {
+      const temp = squares.slice();
+      temp[firstClick] = null;
+      temp[j] = player;
+      if(!temp[4] || calculateWinner(temp) === player)
+        return true;
+      return false;
+    }
+		*Add a check point inside the "second click" case when the cente
+r is occupied after one has 3 pieces on board:
+	// if the next player has its piece on the center, and if the potential 
+move would not vacate the center or win, set the "first click" to default state 
+and do nothing
+	if((this.state.xIsNext && squares[4] === 'X') || (!this.state.xIsNext &&
+ squares[4] === 'O'))
+             if(!this.vacateORwin(firstClick, j, squares, squares[4]))
+                {
+                  this.setState({firstClick : -1});
+                  return;
+                } 
+
+	At this time, chorus-lapilli is ready to play.
+	

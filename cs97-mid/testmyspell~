@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for i in {1..$1}
+do
+	./myspell <(./genspelldata $2 $3 $4)
+done
