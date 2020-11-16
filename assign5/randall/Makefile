@@ -16,11 +16,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 # Optimization level.  Change this -O2 to -Og or -O0 or whatever.
-OPTIMIZE =
+OPTIMIZE = -Og
 
 # The C compiler and its options.
 CC = gcc
-CFLAGS = $(OPTIMIZE) -g3 -Wall -Wextra -fanalyzer \
+CFLAGS = $(OPTIMIZE) -g3 -Wall -Wextra  \
   -march=native -mtune=native -mrdrnd
 
 # The archiver command, its options and filename extension.
@@ -30,8 +30,8 @@ TAREXT = txz
 
 default: randall
 
-randall: randall.c
-	$(CC) $(CFLAGS) $@.c -o $@
+randall: *.c
+	$(CC) $(CFLAGS) *.c -o $@
 
 assignment: randall-assignment.$(TAREXT)
 assignment-files = COPYING Makefile randall.c
@@ -48,3 +48,9 @@ randall-submission.$(TAREXT): $(submission-files)
 
 clean:
 	rm -f *.o *.$(TAREXT) randall
+
+check:
+	if [ `./randall 100 | wc -c` -eq 100 ]; \
+	then echo "test passed -> ./randall 100"; \
+	else echo "test failed -> ./randall 100"; \
+	fi;
