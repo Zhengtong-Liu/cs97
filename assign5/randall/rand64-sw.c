@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "./rand64-sw.h"
 /* Software implementation.  */
 
 /* Input stream containing random bytes.  */
@@ -8,9 +8,9 @@ static FILE *urandstream;
 
 /* Initialize the software rand64 implementation.  */
 void
-software_rand64_init (void)
+software_rand64_init (char* filePath)
 {
-  urandstream = fopen ("/dev/random", "r");
+  urandstream = fopen (filePath, "r");
   if (! urandstream)
     abort ();
 }

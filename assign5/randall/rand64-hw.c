@@ -1,6 +1,6 @@
 #include <cpuid.h>
 #include <immintrin.h>
-#include <stdio.h>
+
 
 /* Hardware implementation.  */
 
