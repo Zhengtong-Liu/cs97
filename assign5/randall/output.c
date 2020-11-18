@@ -22,10 +22,14 @@ bool writebytes1(unsigned long long x, int nbytes)
 
 bool writebytes2(unsigned long long x, int nbytes)
 {
-  unsigned long long* ptr = (unsigned long long* ) malloc(nbytes);
-  *ptr = x;
-  if(!write(1, ptr, nbytes)) return false;
-  free(ptr);
+      while(nbytes > 0){
+        char* pt = (char*) malloc(sizeof(char));
+        *pt = x;
+        if(!write(1, pt, 1)) return false;
+        free(pt);
+        x >>= CHAR_BIT;
+        nbytes--;
+    }
   return true;
 }
 

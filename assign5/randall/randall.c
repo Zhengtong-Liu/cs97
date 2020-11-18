@@ -53,61 +53,50 @@ main (int argc, char **argv)
 
   /* Now that we know we have work to do, arrange to use the
      appropriate library.  */
-  // void (*initialize) (char* filePath);
+  // void (*initialize) (char* file) = NULL;
   unsigned long long (*rand64) (void);
   void (*finalize) (void);
 
-  char* file = "/dev/random";
+  // printf("%d\n", options.input);
   if(options.input == MRAND48_R)
   {
-    software_rand64_init(file);
-    rand64 = software_rand64;
+    software_rand64_init("/dev/random");
+    rand64 = software_mrand48_r;
     finalize = software_rand64_fini;
   }
   else if(options.input == SLASH_F)
   {
-    file = options.r_src;
-    software_rand64_init(file);
+    software_rand64_init(options.r_src);
     rand64 = software_rand64;
     finalize = software_rand64_fini;
   }
   else
   {
-    if(options.input == RDRAND && (!rdrand_supported ()))
-      fprintf(stderr, "rdrand is not available.\n");
-    if(rdrand_supported())
+    if(!rdrand_supported ())
     {
-      hardware_rand64_init();
-      rand64 = hardware_rand64;
-      finalize = hardware_rand64_fini;
+      fprintf(stderr, "rdrand is not available.\n");
+      return 1;
     }
     else
     {
-      software_rand64_init(file);
-      rand64 = software_rand64;
-      finalize = software_rand64_fini;
+      rand64 = hardware_rand64;
+      finalize = hardware_rand64_fini;
     }
-    
   }
   
-  // initialize (file);
+
   int wordsize = sizeof rand64 ();
+  // printf("%d", wordsize);
   int output_errno = 0;
 
-  int nbytes;
-  if(options.output == N)
-  {
-    nbytes = options.block_size * 1000;
-    if(nbytes < 0) {
-      return 1;
-    }
-  }
-  else
-     nbytes = options.nbytes;
-    
+  int nbytes = options.nbytes;
+
+ 
   do
   {
+    // printf("there are %d to be printed \n", nbytes);
     unsigned long long x = rand64 ();
+    // printf("%lld\n", x);
     int outbytes = nbytes < wordsize ? nbytes : wordsize;
       
     if (!writebytes2(x, outbytes))

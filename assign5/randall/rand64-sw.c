@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "./rand64-sw.h"
+#include <time.h>
 /* Software implementation.  */
 
 /* Input stream containing random bytes.  */
@@ -8,9 +8,9 @@ static FILE *urandstream;
 
 /* Initialize the software rand64 implementation.  */
 void
-software_rand64_init (char* filePath)
+software_rand64_init (char* file)
 {
-  urandstream = fopen (filePath, "r");
+  urandstream = fopen (file, "r");
   if (! urandstream)
     abort ();
 }
@@ -23,6 +23,13 @@ software_rand64 (void)
   if (fread (&x, sizeof x, 1, urandstream) != 1)
     abort ();
   return x;
+}
+
+unsigned long long
+software_mrand48_r (void)
+{
+  srand48(time(NULL));
+  return mrand48();
 }
 
 /* Finalize the software rand64 implementation.  */
