@@ -5,7 +5,6 @@
 
 /* Input stream containing random bytes.  */
 static FILE *urandstream;
-
 /* Initialize the software rand64 implementation.  */
 void
 software_rand64_init (char* file)

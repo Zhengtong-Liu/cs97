@@ -43,20 +43,20 @@ main (int argc, char **argv)
 
   if(!options.valid)
   {
-    fprintf (stderr, "%s: incorrect usage\n", argv[0]);
-    return 1;
+    fprintf (stderr, "%s: Incorrect usage\n", argv[0]);
+    exit(1);
   }
   if (options.nbytes == 0)
     return 0;
-  if (options.nbytes < 0)
-    return 1;
+  // if (options.nbytes < 0)
+  //   exit(1);
 
   /* Now that we know we have work to do, arrange to use the
      appropriate library.  */
   // void (*initialize) (char* file) = NULL;
   unsigned long long (*rand64) (void);
   void (*finalize) (void);
-
+  bool rdrand_s = rdrand_supported();
   // printf("%d\n", options.input);
   if(options.input == MRAND48_R)
   {
@@ -70,17 +70,27 @@ main (int argc, char **argv)
     rand64 = software_rand64;
     finalize = software_rand64_fini;
   }
-  else
+  else if(options.input == RDRAND)
   {
-    if(!rdrand_supported ())
+    if(!rdrand_s)
     {
       fprintf(stderr, "rdrand is not available.\n");
-      return 1;
+      exit(1);
     }
-    else
+    rand64 = hardware_rand64;
+    finalize = hardware_rand64_fini; 
+  }
+  else{
+    if (rdrand_s)
     {
       rand64 = hardware_rand64;
       finalize = hardware_rand64_fini;
+    }
+    else
+    {
+      software_rand64_init("/dev/random");
+      rand64 = software_rand64;
+      finalize = software_rand64_fini;
     }
   }
   
@@ -91,15 +101,67 @@ main (int argc, char **argv)
 
   int nbytes = options.nbytes;
 
- 
-  do
+// printf("the output option is %d \n", options.output);
+if(options.output == N)
+{
+  // printf("the block size is %d \n", options.block_size);
+  // if(options.block_size < 0)
+  // {
+  //   fprintf(stderr, "the block size specified is negative.\n");
+  //   exit(1);
+  // }
+  int block_size = options.block_size * 1000;
+  while(nbytes >= block_size)
   {
-    // printf("there are %d to be printed \n", nbytes);
+    char* pt = (char*) malloc(block_size);
+    if(pt == NULL)
+    {
+      fprintf(stderr, "unable to satisfy this memory allocation request.\n");
+      exit(1);
+    }
+    for(int k = 0; k < block_size; k++)
+    {
+      pt[k] = rand64 ();
+    }
+    pt[block_size] = '\0';
+    if(!writebytes2(pt, block_size))
+    {
+      free(pt);
+      fprintf(stderr, "fail to write to stdout.\n");
+      exit(1);
+    };
+    free(pt);
+    nbytes -= block_size;
+  }
+  if(nbytes > 0)
+  {
+    char* pt = (char*) malloc(nbytes);
+    if(pt == NULL)
+    {
+      fprintf(stderr, "unable to satisfy this memory allocation request.\n");
+      exit(1);
+    }
+    for(int k = 0; k < nbytes; k++)
+      pt[k] = rand64 ();
+    pt[nbytes] = '\0';
+    if(!writebytes2(pt, nbytes))
+    {
+      free(pt);
+      fprintf(stderr, "fail to write to stdout.\n");
+      exit(1);
+    }
+    free(pt);
+  }
+}
+else
+{
+   do
+  {
     unsigned long long x = rand64 ();
     // printf("%lld\n", x);
     int outbytes = nbytes < wordsize ? nbytes : wordsize;
       
-    if (!writebytes2(x, outbytes))
+    if (!writebytes1(x, outbytes))
     {
       output_errno = errno;
       break;
@@ -107,16 +169,19 @@ main (int argc, char **argv)
         nbytes -= outbytes;
   }
   while (0 < nbytes);
-  
 
   if (fclose (stdout) != 0)
     output_errno = errno;
+}
+
+
 
   if (output_errno)
     {
       errno = output_errno;
       perror ("output");
     }
+
 
   finalize ();
   return !!output_errno;

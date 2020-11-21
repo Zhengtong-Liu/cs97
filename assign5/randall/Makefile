@@ -54,3 +54,33 @@ check:
 	then echo "test passed -> ./randall 100"; \
 	else echo "test failed -> ./randall 100"; \
 	fi;
+
+check_o_std: 
+	if [ `./randall -o stdio 100 | wc -c` -eq 100 ]; \
+	then echo "test passed -> ./randall -o stdio 100"; \
+	else echo "test failed -> ./randall -o stdio 100"; \
+	fi;
+
+check_o_N:
+	if [ `./randall -o 1 1200 | wc -c` -eq 1200 ]; \
+	then echo "test passed -> ./randall -o 1 1200"; \
+	else echo "test failed -> ./randall -o 1 1200"; \
+	fi;
+
+check_i_rd:
+	if [ `./randall -i rdrand 100 | wc -c` -eq 100 ]; \
+	then echo "test passed -> ./randall -i rdrand 100"; \
+	else echo "test failed -> ./randall -i rdrand 100"; \
+	fi;
+
+check_i_mr:
+	if [ `./randall -i mrand48_r 100 | wc -c` -eq 100 ]; \
+	then echo "test passed -> ./randall -i mrand48_r 100"; \
+	else echo "test failed -> ./randall -i mrand48_r 100"; \
+	fi;
+
+check_i_f:
+	if [ `./randall -i /dev/urandom 100 | wc -c` -eq 100 ]; \
+	then echo "test passed -> ./randall -i /dev/urandom 100"; \
+	else echo "test failed -> ./randall -i /dev/urandom 100"; \
+	fi;

@@ -2,7 +2,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <stdlib.h>
 
 
 
@@ -20,17 +19,11 @@ bool writebytes1(unsigned long long x, int nbytes)
     return true;
 }
 
-bool writebytes2(unsigned long long x, int nbytes)
+bool writebytes2(char* ptr, int nbytes)
 {
-      while(nbytes > 0){
-        char* pt = (char*) malloc(sizeof(char));
-        *pt = x;
-        if(!write(1, pt, 1)) return false;
-        free(pt);
-        x >>= CHAR_BIT;
-        nbytes--;
-    }
-  return true;
+  // if(nbytes < 0) return false;
+  // printf("here is the output %s\n", ptr);
+  return write(1, ptr, nbytes);
 }
 
 

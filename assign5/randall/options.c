@@ -4,7 +4,7 @@
 #include <getopt.h>
 #include <string.h>
 //for debug
-#include <stdio.h>
+// #include <stdio.h>
 #include "./options.h"
 
 void read_options(
@@ -14,46 +14,62 @@ void read_options(
 ) {
     opts -> valid = false;
     int c;
-    if (argv[optind] == NULL) {
-        printf("Mandatory argument(s) missing\n");
-        exit(1);
+    if (argc == 1) return;
+    if(argc == 2) {
+        // if(atoi(argv[optind]) >= 0)
+        // {
+        //     opts -> nbytes = atoi(argv[optind]);
+        //     opts -> valid = true;
+        //     return;
+        // } 
+        char *endptr;
+        errno = 0;
+        opts -> nbytes = strtoll (argv[1], &endptr, 10);
+        // if (errno) perror (argv[1]);
+        // else
+	    opts -> valid = !*endptr && 0 <= (opts -> nbytes);
+        return; 
     }
-    if(argv[optind+1] == NULL) {
-        opts -> nbytes = atoi(argv[optind]);
-        opts -> valid = true;
-        return;
-    }
+    // bool haha = (c = getopt(argc, argv, ":i:o:"));
+    // printf("pass here, haha is %d, c is %d\n", haha, c);
+    bool flag = true;
     while((c = getopt(argc, argv, ":i:o:")) != -1){
         switch(c){
             case 'i':
                 if(strcmp(optarg, "rdrand") == 0)
-                    opts -> input = RDRAND;
+                    opts -> input = RDRAND;   
                 else if(strcmp(optarg, "mrand48_r") == 0)
                     opts -> input = MRAND48_R;
                 else if(optarg[0] == '/'){
                     opts -> input = SLASH_F;
                     opts -> r_src = optarg;
-                }else
-                    break;
+                }else{
+                    flag = false;
+                };
+                break;
             case 'o':
-                if(strcmp(optarg, "stdio") == 0)
-                    opts -> output = STDOUT;
-                else{
+                if(atoi(optarg)){
                     opts -> output = N;
                     opts -> block_size = atoi(optarg);
                 }
-                opts -> valid = true;
+                else if(strcmp(optarg, "stdio") == 0){
+                    opts -> output = STDOUT;
+                }
+                else{
+                    flag = false;
+                }; 
                 break;
             case ':':
-                break;
             case '?':
+                flag = false;
                 break;
         }
+        opts -> valid = flag;
+        // printf("the current optind is %d, the current argc is %d.\n", optind, argc);
         if(optind >= argc) return;
         opts -> nbytes = atoi(argv[optind]);
-        if(opts -> nbytes >= 0)
-        {
-            opts -> valid = true;
-        }
+        
+        if(opts -> nbytes >= 0 && flag)
+             opts -> valid = true;
     }
 }

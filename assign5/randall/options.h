@@ -9,7 +9,7 @@ struct opts {
     enum INPUT input;
     enum OUTPUT output;
     char* r_src;
-    unsigned int block_size;
+    int block_size;
 };
 
 void read_options(
