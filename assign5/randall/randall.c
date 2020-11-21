@@ -130,7 +130,8 @@ if(options.output == N)
       fprintf(stderr, "fail to write to stdout.\n");
       exit(1);
     }
-    free(pt);
+    else
+      free(pt);
     nbytes -= block_size;
   }
   if(nbytes > 0)
@@ -150,7 +151,8 @@ if(options.output == N)
       fprintf(stderr, "fail to write to stdout.\n");
       exit(1);
     }
-    free(pt);
+    else
+      free(pt);
   }
 }
 else
