@@ -60,8 +60,8 @@ main (int argc, char **argv)
   // printf("%d\n", options.input);
   if(options.input == MRAND48_R)
   {
-    software_rand64_init("/dev/random");
-    rand64 = software_mrand48_r;
+    mrand48_rng_init();
+    rand64 = mrand48_rng;
     finalize = software_rand64_fini;
   }
   else if(options.input == SLASH_F)
