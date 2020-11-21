@@ -129,7 +129,7 @@ if(options.output == N)
       free(pt);
       fprintf(stderr, "fail to write to stdout.\n");
       exit(1);
-    };
+    }
     free(pt);
     nbytes -= block_size;
   }
