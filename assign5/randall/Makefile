@@ -20,7 +20,7 @@ OPTIMIZE = -Og
 
 # The C compiler and its options.
 CC = gcc
-CFLAGS = $(OPTIMIZE) -g3 -Wall -Wextra -fanalyzer -fsanitize=address -fsanitize=undefined \
+CFLAGS = $(OPTIMIZE) -g3 -Wall -Wextra -fanalyzer \
   -march=native -mtune=native -mrdrnd
 
 # The archiver command, its options and filename extension.
