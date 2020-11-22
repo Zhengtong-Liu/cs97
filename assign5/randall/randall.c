@@ -123,7 +123,7 @@ if(options.output == N)
     {
       pt[k] = rand64 ();
     }
-    pt[block_size] = '\0';
+    // pt[block_size] = '\0';
     if(!writebytes2(pt, block_size))
     {
       // free(pt);
@@ -144,7 +144,7 @@ if(options.output == N)
     }
     for(int k = 0; k < nbytes; k++)
       pt[k] = rand64 ();
-    pt[nbytes] = '\0';
+    // pt[nbytes] = '\0';
     if(!writebytes2(pt, nbytes))
     {
       // free(pt);
