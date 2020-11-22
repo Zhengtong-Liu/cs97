@@ -62,7 +62,7 @@ main (int argc, char **argv)
   {
     mrand48_rng_init();
     rand64 = mrand48_rng;
-    finalize = software_rand64_fini;
+    finalize = mrand48_fini;
   }
   else if(options.input == SLASH_F)
   {

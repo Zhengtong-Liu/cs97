@@ -10,6 +10,7 @@ software_rand64_fini (void);
 void mrand48_rng_init(void);
 unsigned long long
 mrand48_rng (void);
+void mrand48_fini (void);
 
 
 

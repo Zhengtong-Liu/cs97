@@ -44,6 +44,11 @@ mrand48_rng (void)
   // return mrand48();
 }
 
+void mrand48_fini (void)
+{
+  
+}
+
 /* Finalize the software rand64 implementation.  */
 void
 software_rand64_fini (void)
