@@ -126,11 +126,11 @@ if(options.output == N)
     // pt[block_size] = '\0';
     if(!writebytes2(pt, block_size))
     {
-      // free(pt);
+      free(pt);
       fprintf(stderr, "fail to write to stdout.\n");
       exit(1);
     };
-    // free(pt);
+    free(pt);
     nbytes -= block_size;
   }
   if(nbytes > 0)
@@ -146,11 +146,11 @@ if(options.output == N)
     // pt[nbytes] = '\0';
     if(!writebytes2(pt, nbytes))
     {
-      // free(pt);
+      free(pt);
       fprintf(stderr, "fail to write to stdout.\n");
       exit(1);
     }
-    // free(pt);
+    free(pt);
   }
 }
 else
