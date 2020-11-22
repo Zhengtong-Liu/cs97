@@ -20,7 +20,7 @@ OPTIMIZE = -Og
 
 # The C compiler and its options.
 CC = gcc
-CFLAGS = $(OPTIMIZE) -g3 -Wall -Wextra  \
+CFLAGS = $(OPTIMIZE) -g3 -Wall -Wextra -fsanitize=address -fsanitize=undefined \
   -march=native -mtune=native -mrdrnd
 
 # The archiver command, its options and filename extension.
@@ -84,3 +84,5 @@ check_i_f:
 	then echo "test passed -> ./randall -i /dev/urandom 100"; \
 	else echo "test failed -> ./randall -i /dev/urandom 100"; \
 	fi;
+
+check_all: check check_i_f check_i_mr check_i_rd check_o_N check_o_std
