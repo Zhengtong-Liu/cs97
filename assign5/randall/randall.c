@@ -104,12 +104,6 @@ main (int argc, char **argv)
 // printf("the output option is %d \n", options.output);
 if(options.output == N)
 {
-  // printf("the block size is %d \n", options.block_size);
-  // if(options.block_size < 0)
-  // {
-  //   fprintf(stderr, "the block size specified is negative.\n");
-  //   exit(1);
-  // }
   int block_size = options.block_size * 1000;
   while(nbytes >= block_size)
   {

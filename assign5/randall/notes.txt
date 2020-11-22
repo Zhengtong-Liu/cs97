@@ -1,0 +1,271 @@
+1. Preparation work
+    (1) First, I created a cs97 git repository that stores all of cs97
+assignments;
+    (2) Added a "assign5" directory in this repository, and copied the
+randall compressed file into it using command  
+        wget https://web.cs.ucla.edu/classes/fall20/cs97-1/assign/randall-assignment.txz
+    (3) Unpacked the .txz file using command
+        tar xvf randall-assignment.txz
+    (4) removed the "-fanalyzer" temporarily so that I can compile it
+in the local environment
+    (5) opened the git repository in vscode at local
+
+2. Basic change to Makefile and modualization
+    (1) Followed the discussion notes, set the optimization level to
+-Og, and added the basic check target:
+        check:
+            if [ `./randall 100 | wc -c` -eq 100 ]; \
+            then echo "test passed -> ./randall 100"; \
+            else echo "test failed -> ./randall 100"; \
+            fi;
+    and checked that this work by checking it on the original file
+    (2) split randall.c into several modules(as specified in the HW spec)
+    (3) checked that the modules contained the minimal number of include
+files by adding them all and delete them one by one, see if error occurs
+    (4) changed the corresponding parts of Makefile
+        randall: *.c
+	        $(CC) $(CFLAGS) *.c -o $@
+        and check that the modualization work using "make check" after
+    compilation
+
+3. Added Options using getopt()
+    (1) Created a new file "options.c" and its header file
+    (2) Followed the tutorial given in discussion, used getopt() to
+parse the arguments; basically, three main situations were "-i", "-o"
+and the "no options". The original "nbytes" arguement without options
+was the first condition:
+        if (argc == 1) return;
+        if(argc == 2) {
+            char *endptr;
+            errno = 0;
+            opts -> nbytes = strtoll (argv[1], &endptr, 10);
+            opts -> valid = !*endptr && 0 <= (opts -> nbytes);
+            return; 
+        }
+    after this, handle the arguemnts with option flags:
+        // this flag would turn to false if getopt encounters incorrect 
+        usages of randall
+        bool flag = true;
+        while((c = getopt(argc, argv, ":i:o:")) != -1){
+            switch(c){
+                case 'i':
+                    if(strcmp(optarg, "rdrand") == 0)
+                        opts -> input = RDRAND;   
+                    else if(strcmp(optarg, "mrand48_r") == 0)
+                        opts -> input = MRAND48_R;
+                    else if(optarg[0] == '/'){
+                        opts -> input = SLASH_F;
+                        opts -> r_src = optarg;
+                    }else{
+                        flag = false;
+                    };
+                    break;
+                case 'o':
+                    if(atoi(optarg)){
+                        opts -> output = N;
+                        opts -> block_size = atoi(optarg);
+                    }
+                    else if(strcmp(optarg, "stdio") == 0){
+                        opts -> output = STDOUT;
+                    }
+                    else{
+                        flag = false;
+                    }; 
+                    break;
+                case ':':
+                case '?':
+                    flag = false;
+                    break;
+            }
+            opts -> valid = flag;
+    lastly, handle the nybtes arguemnt at last(if needed):
+            if(optind >= argc) return;
+            opts -> nbytes = atoi(argv[optind]);
+            
+            if(opts -> nbytes >= 0 && flag)
+                opts -> valid = true;
+    Also, note that options information were stored in a structure
+and option types were indicated using enum as adivised in the
+dicussion:
+    //options.h
+        #include <stdbool.h>
+
+        enum INPUT { RDRAND, MRAND48_R, SLASH_F };
+        enum OUTPUT { STDOUT, N };
+
+        struct opts {
+            bool valid;
+            long long nbytes;
+            enum INPUT input;
+            enum OUTPUT output;
+            char* r_src;
+            int block_size;
+        };
+
+        void read_options(
+            int argc,
+            char* argv[],
+            struct opts* opts  
+        );
+
+    4. implement the output options
+        (1) if the output option is followed with N, malloc N*1000 each
+     time and write the given inputs into it; note that the situations
+     need to be separated as "nbytes >= block_size" and "nbytes < block_size"
+            if(options.output == N)
+            {
+            int block_size = options.block_size * 1000;
+            while(nbytes >= block_size)
+            {
+                char* pt = (char*) malloc(block_size);
+                if(pt == NULL)
+                {
+                fprintf(stderr, "unable to satisfy this memory allocation request.\n");
+                exit(1);
+                }
+                for(int k = 0; k < block_size; k++)
+                {
+                pt[k] = rand64 ();
+                }
+                if(!writebytes2(pt, block_size))
+                {
+                fprintf(stderr, "fail to write to stdout.\n");
+                exit(1);
+                }
+                nbytes -= block_size;
+            }
+            if(nbytes > 0)
+            {
+                char* pt = (char*) malloc(nbytes);
+                if(pt == NULL)
+                {
+                fprintf(stderr, "unable to satisfy this memory allocation request.\n");
+                exit(1);
+                }
+                for(int k = 0; k < nbytes; k++)
+                pt[k] = rand64 ();
+                if(!writebytes2(pt, nbytes))
+                {
+                fprintf(stderr, "fail to write to stdout.\n");
+                exit(1);
+                }
+            }
+            }
+        otherwise, using the default option as before;
+        also, writebytes2 was specified in output.c:
+            bool writebytes2(char* ptr, int nbytes)
+            {
+            return write(1, ptr, nbytes);
+            }
+        with its prototype in the header file;
+        (the original writeBytes function is changed to writebytes1)
+    
+    5. implement the input options
+        (1) firstly, I deleted the initialize variable so that I can 
+    pass the file name into the init functions; added the basic if-else
+    structure to handle different inputs; this step actually handled the '/F'
+    flag
+
+        (2) then, I added the init and rand functions for mrand48_r in
+        rand64-sw.c and used them in randall.c (this actually would cause
+        segmentation fault on lnxsrv)
+            struct drand48_data buf = {0};
+            void mrand48_rng_init(void){
+                srand48_r(time(0), &buf);
+            }
+
+            unsigned long long
+            mrand48_rng (void)
+            {
+                long int a, b;
+                mrand48_r(&buf, &a);
+                mrand48_r(&buf, &b);
+                return (((unsigned long long) a) << 32) | ((unsigned long long) b & 0x00000000FFFFFFFF);
+            }
+
+        (3) added the rdrand options and the default input option
+            else if(options.input == RDRAND)
+        {
+            if(!rdrand_s)
+            {
+            fprintf(stderr, "rdrand is not available.\n");
+            exit(1);
+            }
+            rand64 = hardware_rand64;
+            finalize = hardware_rand64_fini; 
+        }
+        else{
+            if (rdrand_s)
+            {
+            rand64 = hardware_rand64;
+            finalize = hardware_rand64_fini;
+            }
+            else
+            {
+            software_rand64_init("/dev/random");
+            rand64 = software_rand64;
+            finalize = software_rand64_fini;
+            }
+        }
+  
+
+    5. test the program
+        (1) firstly, I wrote several target in the Makefile to test each option 
+    individually:
+        check_o_std: 
+            if [ `./randall -o stdio 100 | wc -c` -eq 100 ]; \
+            then echo "test passed -> ./randall -o stdio 100"; \
+            else echo "test failed -> ./randall -o stdio 100"; \
+            fi;
+
+        check_o_N:
+            if [ `./randall -o 1 1200 | wc -c` -eq 1200 ]; \
+            then echo "test passed -> ./randall -o 1 1200"; \
+            else echo "test failed -> ./randall -o 1 1200"; \
+            fi;
+
+        check_i_rd:
+            if [ `./randall -i rdrand 100 | wc -c` -eq 100 ]; \
+            then echo "test passed -> ./randall -i rdrand 100"; \
+            else echo "test failed -> ./randall -i rdrand 100"; \
+            fi;
+
+        check_i_mr:
+            if [ `./randall -i mrand48_r 100 | wc -c` -eq 100 ]; \
+            then echo "test passed -> ./randall -i mrand48_r 100"; \
+            else echo "test failed -> ./randall -i mrand48_r 100"; \
+            fi;
+
+        check_i_f:
+            if [ `./randall -i /dev/urandom 100 | wc -c` -eq 100 ]; \
+            then echo "test passed -> ./randall -i /dev/urandom 100"; \
+            else echo "test failed -> ./randall -i /dev/urandom 100"; \
+            fi;
+        and then I made a target which test all the options one by one
+            check_all: check check_i_f check_i_mr check_i_rd check_o_N check_o_std
+        
+        I also tried some combinations of different options, together with some
+        invalid options, and they worked after some fixes
+
+        (2) afterwards, I added some gcc flags and other ways to test the performance
+            for example:
+                -fsanitize=address, -fsanitize=undefined (on local machine)
+                -fanalyzer (on lnxsrv)
+            In fact, some errors regarding memory were resolved in this process, for 
+            example, I wrote one more byte than I malloc() before, and I fixed that
+            error after getting error information from the options above
+        
+        (3) test the performance of each and combined option(s) of randall
+            first, I tried the given test commands on the HW spec:
+                    # This is a sanity check to test whether you’re in the right ballpark.
+                        time dd if=/dev/urandom ibs=8192 obs=8192 count=16384 >/dev/null
+
+                        time ./randall 133562368 >/dev/null
+                        time ./randall 133562368 | cat >/dev/null
+                        time ./randall 133562368 >rand.data
+                    They worked fine, and the speed is relatively the same as that of the
+                    original one.
+            then, I added some option flags to test the time cost, it seems that "-o N" would
+            cost a relatively longer time than others, and the time cost decreased a bit if the
+            block_size was made larger. For other options, they behave relatively the same, with
+            the default ones run faster(but not much)
