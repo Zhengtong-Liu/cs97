@@ -5,7 +5,8 @@
 
 /* Input stream containing random bytes.  */
 static FILE *urandstream;
-struct drand48_data buf = {0};
+struct drand48_data buf1;
+struct drand48_data buf2;
 /* Initialize the software rand64 implementation.  */
 void
 software_rand64_init (char* file)
@@ -26,16 +27,19 @@ software_rand64 (void)
 }
 
 void mrand48_rng_init(void){
-  srand48_r(time(0), &buf);
+  srand48_r(time(NULL), &buf1);
+  srand48_r(time(NULL), &buf2);
+
 }
 
 unsigned long long
 mrand48_rng (void)
 {
   long int a, b;
-  mrand48_r(&buf, &a);
-  mrand48_r(&buf, &b);
-  return (((unsigned long long) a) << 32) | ((unsigned long long) b & 0x00000000FFFFFFFF);
+  mrand48_r(&buf1, &a);
+  mrand48_r(&buf2, &b);
+  unsigned long long x = (((unsigned long long) a) << 32) | ((unsigned long long) b & 0x00000000FFFFFFFF);
+  return x;
   // srand48(time(NULL));
   // return mrand48();
 }
