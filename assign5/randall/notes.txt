@@ -265,7 +265,41 @@ dicussion:
                         time ./randall 133562368 >rand.data
                     They worked fine, and the speed is relatively the same as that of the
                     original one.
-            then, I added some option flags to test the time cost, it seems that "-o N" would
-            cost a relatively longer time than others, and the time cost decreased a bit if the
-            block_size was made larger. For other options, they behave relatively the same, with
-            the default ones run faster(but not much)
+            then, I added some option flags to test the time cost, it seems that the default options 
+            would cost a relatively longer time than others, and among all other options, -i mrand48_r
+            seems to be a bit faster. For other options, they behave relatively the same.
+                Results on lnxsrv09:
+                    time ./randall -o 100  133562368 >/dev/null
+                        real	0m1.875s
+                        user	0m1.872s
+                        sys	    0m0.002s
+                    time ./randall -o 10  133562368 >/dev/null
+                        real	0m1.874s
+                        user	0m1.865s
+                        sys	    0m0.009s
+                    time ./randall -o 1  133562368 >/dev/null
+                        real	0m1.958s
+                        user	0m1.905s
+                        sys	    0m0.053s
+                    time ./randall -o stdio  133562368 >/dev/null
+                        real	0m2.922s
+                        user	0m2.903s
+                        sys	    0m0.018s
+                    time ./randall -i rdrand 133562368 >/dev/null
+                        real	0m2.975s
+                        user	0m2.940s
+                        sys    	0m0.026s
+                    time ./randall -i /dev/urandom 133562368 >/dev/null
+                        real	0m2.534s
+                        user	0m1.680s
+                        sys	    0m0.854s
+                    time ./randall -i mrand48_r 133562368 >/dev/null
+                        real	0m1.505s
+                        user	0m1.484s
+                        sys	    0m0.020s
+
+
+
+
+
+
