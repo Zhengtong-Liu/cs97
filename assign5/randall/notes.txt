@@ -180,7 +180,8 @@ dicussion:
                 long int a, b;
                 mrand48_r(&buf, &a);
                 mrand48_r(&buf, &b);
-                return (((unsigned long long) a) << 32) | ((unsigned long long) b & 0x00000000FFFFFFFF);
+                return (((unsigned long long) a) << 32) | 
+                ((unsigned long long) b & 0x00000000FFFFFFFF);
             }
 
         (3) added the rdrand options and the default input option
@@ -265,8 +266,10 @@ dicussion:
                         time ./randall 133562368 >rand.data
                     They worked fine, and the speed is relatively the same as that of the
                     original one.
-            then, I added some option flags to test the time cost, it seems that the default options 
-            would cost a relatively longer time than others, and among all other options, -i mrand48_r
+            then, I added some option flags to test the time cost, it seems that the default 
+options 
+            would cost a relatively longer time than others, and among all other options, -i 
+mrand48_r
             seems to be a bit faster. For other options, they behave relatively the same.
                 Results on lnxsrv09:
                     time ./randall -o 100  133562368 >/dev/null

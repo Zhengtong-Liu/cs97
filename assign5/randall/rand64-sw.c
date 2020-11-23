@@ -38,7 +38,8 @@ mrand48_rng (void)
   long int a, b;
   mrand48_r(&buf1, &a);
   mrand48_r(&buf2, &b);
-  unsigned long long x = (((unsigned long long) a) << 32) | ((unsigned long long) b & 0x00000000FFFFFFFF);
+  unsigned long long x = (((unsigned long long) a) << 32) | 
+  ((unsigned long long) b & 0x00000000FFFFFFFF);
   return x;
   // srand48(time(NULL));
   // return mrand48();
