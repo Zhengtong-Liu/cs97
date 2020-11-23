@@ -16,22 +16,13 @@ void read_options(
     int c;
     if (argc == 1) return;
     if(argc == 2) {
-        // if(atoi(argv[optind]) >= 0)
-        // {
-        //     opts -> nbytes = atoi(argv[optind]);
-        //     opts -> valid = true;
-        //     return;
-        // } 
         char *endptr;
         errno = 0;
         opts -> nbytes = strtoll (argv[1], &endptr, 10);
-        // if (errno) perror (argv[1]);
-        // else
 	    opts -> valid = !*endptr && 0 <= (opts -> nbytes);
         return; 
     }
-    // bool haha = (c = getopt(argc, argv, ":i:o:"));
-    // printf("pass here, haha is %d, c is %d\n", haha, c);
+
     bool flag = true;
     while((c = getopt(argc, argv, ":i:o:")) != -1){
         switch(c){
@@ -65,11 +56,11 @@ void read_options(
                 break;
         }
         opts -> valid = flag;
-        // printf("the current optind is %d, the current argc is %d.\n", optind, argc);
         if(optind >= argc) return;
-        opts -> nbytes = atoi(argv[optind]);
-        
-        if(opts -> nbytes >= 0 && flag)
-             opts -> valid = true;
+        char *endptr;
+        errno = 0;
+        opts -> nbytes = strtoll (argv[optind], &endptr, 10);
+	    opts -> valid = !*endptr && 0 <= (opts -> nbytes) && flag;
+
     }
 }
