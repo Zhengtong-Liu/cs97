@@ -66,9 +66,9 @@ void read_options(
         }
         opts -> valid = flag;
         if(optind >= argc) return;
-        char *endptr;
-        errno = 0;
-        opts -> nbytes = strtoll (argv[1], &endptr, 10);
-	    opts -> valid = !*endptr && 0 <= (opts -> nbytes);
+        opts -> nbytes = atoi(argv[optind]);
+        
+        if(opts -> nbytes >= 0 && flag)
+             opts -> valid = true;
     }
 }
