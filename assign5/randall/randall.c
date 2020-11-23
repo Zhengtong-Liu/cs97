@@ -113,9 +113,15 @@ if(options.output == N)
       fprintf(stderr, "unable to satisfy this memory allocation request.\n");
       exit(1);
     }
-    for(int k = 0; k < block_size; k++)
+    for(int k = 0; k < block_size; k += 8)
     {
-      pt[k] = rand64 ();
+       unsigned long long x = rand64 ();
+      for(int j = 0; j < 8; j++)
+      {
+        pt[k+j] = x;
+        x >>= 8;
+      }
+      
     }
     // pt[block_size] = '\0';
     if(!writebytes2(pt, block_size))
