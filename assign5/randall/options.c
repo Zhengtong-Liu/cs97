@@ -65,11 +65,10 @@ void read_options(
                 break;
         }
         opts -> valid = flag;
-        // printf("the current optind is %d, the current argc is %d.\n", optind, argc);
         if(optind >= argc) return;
-        opts -> nbytes = atoi(argv[optind]);
-        
-        if(opts -> nbytes >= 0 && flag)
-             opts -> valid = true;
+        char *endptr;
+        errno = 0;
+        opts -> nbytes = strtoll (argv[1], &endptr, 10);
+	    opts -> valid = !*endptr && 0 <= (opts -> nbytes);
     }
 }
