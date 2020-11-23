@@ -40,7 +40,8 @@ randall-assignment.$(TAREXT): $(assignment-files)
 
 submission: randall-submission.$(TAREXT)
 submission-files = $(assignment-files) \
-  notes.txt # More files should be listed here, as needed.
+  notes.txt options.* output.* rand64-hw.* \
+  rand64-sw.* # More files should be listed here, as needed.
 randall-submission.$(TAREXT): $(submission-files)
 	$(TAR) $(TARFLAGS) -cf $@ $(submission-files)
 
